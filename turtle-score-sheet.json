@@ -1,0 +1,34 @@
+{
+  "level1": {
+    "characterMax": 180,
+    "pass": 10
+  },
+  "level2": {
+    "characterMax": 224,
+    "pass": 10
+  },
+  "level3": {
+    "characterMax": 2100,
+    "pass": 50
+  },
+  "level4": {
+    "characterMax": 1900,
+    "pass": 75
+  },
+  "level5": {
+    "characterMax": 1500,
+    "pass": 100
+  },
+  "level6": {
+    "characterMax": 420,
+    "pass": 100
+  },
+  "level7": {
+    "characterMax": 480,
+    "pass": 100
+  },
+  "level8": {
+    "characterMax": 800,
+    "pass": 100
+  }
+}
