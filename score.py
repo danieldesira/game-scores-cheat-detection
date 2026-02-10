@@ -37,6 +37,7 @@ class Score:
 
     def check(self, sheet):
         max_points = 0
+
         level = self.__level
         for i in range(1, level + 1):
             level_data = sheet.get(f"level{i}")
@@ -44,4 +45,10 @@ class Score:
                 max_points += level_data.get('characterMax')
                 if i < level or self.__outcome_id == Outcomes.Win:
                     max_points += level_data.get('pass')
+
+        duration_reward = sheet.get('durationReward')
+        if duration_reward is not None:
+            if self.__duration <= duration_reward.get('durationLimit') and self.__outcome_id == Outcomes.Win:
+                max_points += duration_reward.get('reward')
+
         return max_points >= self.__points

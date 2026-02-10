@@ -30,5 +30,9 @@
   "level8": {
     "characterMax": 800,
     "pass": 100
+  },
+  "durationReward": {
+    "durationLimit": 300,
+    "reward": 300
   }
 }
