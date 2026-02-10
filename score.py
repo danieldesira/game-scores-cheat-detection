@@ -19,4 +19,6 @@ class Score:
             level_data = sheet.get(f"level{i}")
             if level_data is not None:
                 max_points += level_data.get('characterMax')
+                if i < level or self.__outcome_id == 2:
+                    max_points += level_data.get('pass')
         return max_points >= self.__points
