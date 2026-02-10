@@ -8,7 +8,6 @@ class Score:
         self.__duration = score_entry.get('duration')
         self.__level = score_entry.get('level')
         self.__outcome_id = score_entry.get('outcome_id')
-        self.__duration = score_entry.get('duration')
         self.__player_id = score_entry.get('player_id')
 
     @property
@@ -35,19 +34,19 @@ class Score:
     def player_id(self) -> int:
         return self.__player_id
 
-    def check(self, sheet):
+    def check(self, rule_sheet):
         max_points = 0
 
         level = self.__level
         for i in range(1, level + 1):
-            level_data = sheet.get(f"level{i}")
+            level_data = rule_sheet.get(f"level{i}")
             if level_data is not None:
                 max_points += level_data.get('characterMax')
                 if i < level or self.__outcome_id == Outcomes.Win:
                     max_points += level_data.get('pass')
 
-        duration_reward = sheet.get('durationReward')
-        if duration_reward is not None:
+        duration_reward = rule_sheet.get('durationReward')
+        if duration_reward is not None and self.__duration is not None:
             if self.__duration <= duration_reward.get('durationLimit') and self.__outcome_id == Outcomes.Win:
                 max_points += duration_reward.get('reward')
 
