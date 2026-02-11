@@ -17,13 +17,7 @@ def connect_redis():
     )
 
 
-def load_redis_scores():
-    redis_client = connect_redis()
-    data = redis_client.get('scores')
-    return json.loads(data)
-
-
-def load_scores_sheet():
+def load_scores_rule_sheet():
     try:
         with open('turtle-score-sheet.json') as file:
             return json.load(file)
@@ -31,41 +25,34 @@ def load_scores_sheet():
         print('turtle-score-sheet.json not found')
 
 
-def save_pending_scores(scores):
-    redis_client = connect_redis()
-    redis_client.set('scores', json.dumps(scores))
-
-
 def connect_postgres():
     connection_string = os.getenv('DATABASE_URL')
     return psycopg.connect(connection_string, autocommit=True)
 
 
-def remove_scores_from_db(ids: list[int]):
-    if len(ids) > 0:
-        connection = connect_postgres()
-        with connection.cursor() as cursor:
-            cursor.execute("DELETE FROM scores WHERE id IN (%s)", ids)
+def remove_score_from_db(score_id: int):
+    connection = connect_postgres()
+    with connection.cursor() as cursor:
+        cursor.execute("DELETE FROM scores WHERE id = %s", (score_id,))
 
 
 def main():
-    scores_to_review = load_redis_scores()
-    scores_sheet = load_scores_sheet()
+    print('Starting up scores cheat detection...')
 
-    offending_score_ids = list()
+    redis_client = connect_redis()
+    scores_rule_sheet = load_scores_rule_sheet()
 
-    for score_entry in scores_to_review:
-        score = Score(score_entry)
-        if score.check(scores_sheet):
-            print(f"Score {score.id} verified successfully")
-        else:
-            print(f"Cheat score detected. id: {score.id} |"
-                  f" {score.points} points | level {score.level} | duration {score.duration} |"
-                  f" {score.outcome_id} | {score.player_id}")
-            offending_score_ids.append(score.id)
-
-    remove_scores_from_db(offending_score_ids)
-    save_pending_scores([])
+    while True:
+        _, new_score = redis_client.brpop('scoreQueue')
+        if new_score is not None:
+            score = Score(json.loads(new_score))
+            if score.check(scores_rule_sheet):
+                print(f"Score {score.id} verified successfully")
+            else:
+                print(f"Cheat score detected. id: {score.id} |"
+                      f" {score.points} points | level {score.level} | duration {score.duration} |"
+                      f" {score.outcome_id} | {score.player_id}")
+                remove_score_from_db(score.id)
 
 
 main()
