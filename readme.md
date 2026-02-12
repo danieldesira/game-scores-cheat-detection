@@ -1,9 +1,12 @@
 # Game Scores Cheat Detection
 
-Proof-of-concept console app in Python which 
-compares the scores in a Redis store against a rule 
-sheet in a file. Used for Mission Sea Turtle Nest 
-but can be adapted to support other games too.
+Worker process in Python which consumes a Redis 
+queue of game scores and compares them against a 
+rule sheet in a file. Used for Mission Sea Turtle 
+Nest but can be adapted to support other games in 
+the future through simple architecture changes 
+and adding JSON rule sheets following the existing 
+pattern.
 
 ## Rule sheet structure
 
