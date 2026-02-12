@@ -1,4 +1,4 @@
-from outcomes import Outcomes
+from src.outcomes import Outcomes
 
 
 class Score:
@@ -37,17 +37,16 @@ class Score:
     def check(self, rule_sheet):
         max_points = 0
 
-        level = self.__level
-        for i in range(1, level + 1):
+        for i in range(1, self.__level + 1):
             level_data = rule_sheet.get(f"level{i}")
             if level_data is not None:
                 max_points += level_data.get('characterMax')
-                if i < level or self.__outcome_id == Outcomes.Win:
+                if i < self.__level | self.__outcome_id == Outcomes.Win:
                     max_points += level_data.get('pass')
 
         duration_reward = rule_sheet.get('durationReward')
         if duration_reward is not None:
-            if self.__duration <= duration_reward.get('durationLimit') and self.__outcome_id == Outcomes.Win:
+            if self.__duration <= duration_reward.get('durationLimit') & self.__outcome_id == Outcomes.Win:
                 max_points += duration_reward.get('reward')
 
         return max_points >= self.__points

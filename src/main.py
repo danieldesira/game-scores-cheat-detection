@@ -3,7 +3,7 @@ import json
 import dotenv
 import psycopg
 import redis
-from score import Score
+from src.score import Score
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
@@ -22,7 +22,7 @@ def connect_redis():
 
 def load_scores_rule_sheet():
     try:
-        with open('./src/rulesheets/turtle-score-sheet.json') as file:
+        with open('./rulesheets/turtle-score-sheet.json') as file:
             return json.load(file)
     except FileNotFoundError:
         print('turtle-score-sheet.json not found')
