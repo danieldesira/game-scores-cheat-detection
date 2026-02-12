@@ -41,12 +41,12 @@ class Score:
             level_data = rule_sheet.get(f"level{i}")
             if level_data is not None:
                 max_points += level_data.get('characterMax')
-                if i < self.__level | self.__outcome_id == Outcomes.Win:
+                if i < self.__level or self.__outcome_id == Outcomes.Win.value:
                     max_points += level_data.get('pass')
 
         duration_reward = rule_sheet.get('durationReward')
         if duration_reward is not None:
-            if self.__duration <= duration_reward.get('durationLimit') & self.__outcome_id == Outcomes.Win:
+            if self.__duration <= duration_reward.get('durationLimit') and self.__outcome_id == Outcomes.Win.value:
                 max_points += duration_reward.get('reward')
 
         return max_points >= self.__points

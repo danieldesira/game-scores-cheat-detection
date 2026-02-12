@@ -1,5 +1,6 @@
 import unittest
 
+from src.outcomes import Outcomes
 from src.score import Score
 
 
@@ -30,7 +31,7 @@ class TestScoreMethods(unittest.TestCase):
             'points': 1900,
             'level': 1,
             'duration': 100,
-            'outcome_id': 1,
+            'outcome_id': Outcomes.Loss.value,
             'player_id': 1,
         })
         self.assertEqual(score.check(self.__rulesheet), True)
@@ -41,7 +42,7 @@ class TestScoreMethods(unittest.TestCase):
             'points': 2001,
             'level': 1,
             'duration': 100,
-            'outcome_id': 1,
+            'outcome_id': Outcomes.Loss.value,
             'player_id': 1,
         })
         self.assertEqual(score.check(self.__rulesheet), False)
@@ -52,7 +53,7 @@ class TestScoreMethods(unittest.TestCase):
             'points': 4600,
             'level': 2,
             'duration': 100,
-            'outcome_id': 1,
+            'outcome_id': Outcomes.Loss.value,
             'player_id': 1,
         })
         self.assertEqual(score.check(self.__rulesheet), True)
@@ -63,7 +64,7 @@ class TestScoreMethods(unittest.TestCase):
             'points': 4601,
             'level': 2,
             'duration': 100,
-            'outcome_id': 1,
+            'outcome_id': Outcomes.Loss.value,
             'player_id': 1,
         })
         self.assertEqual(score.check(self.__rulesheet), False)
@@ -74,7 +75,7 @@ class TestScoreMethods(unittest.TestCase):
             'points': 7500,
             'level': 3,
             'duration': 200,
-            'outcome_id': 2,
+            'outcome_id': Outcomes.Win.value,
             'player_id': 1,
         })
         self.assertEqual(score.check(self.__rulesheet), True)
@@ -85,7 +86,51 @@ class TestScoreMethods(unittest.TestCase):
             'points': 7501,
             'level': 3,
             'duration': 200,
-            'outcome_id': 2,
+            'outcome_id': Outcomes.Win.value,
+            'player_id': 1,
+        })
+        self.assertEqual(score.check(self.__rulesheet), False)
+
+    def test_valid_level3_beyond_duration_limit(self):
+        score = Score({
+            'id': 1,
+            'points': 7400,
+            'level': 3,
+            'duration': 201,
+            'outcome_id': Outcomes.Win.value,
+            'player_id': 1,
+        })
+        self.assertEqual(score.check(self.__rulesheet), True)
+
+    def test_invalid_level3_beyond_duration_limit(self):
+        score = Score({
+            'id': 1,
+            'points': 7401,
+            'level': 3,
+            'duration': 201,
+            'outcome_id': Outcomes.Win.value,
+            'player_id': 1,
+        })
+        self.assertEqual(score.check(self.__rulesheet), False)
+
+    def test_valid_level3_loss(self):
+        score = Score({
+            'id': 1,
+            'points': 7250,
+            'level': 3,
+            'duration': 201,
+            'outcome_id': Outcomes.Loss.value,
+            'player_id': 1,
+        })
+        self.assertEqual(score.check(self.__rulesheet), True)
+
+    def test_invalid_level3_loss(self):
+        score = Score({
+            'id': 1,
+            'points': 7251,
+            'level': 3,
+            'duration': 201,
+            'outcome_id': Outcomes.Loss.value,
             'player_id': 1,
         })
         self.assertEqual(score.check(self.__rulesheet), False)
