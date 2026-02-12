@@ -9,25 +9,31 @@ dotenv.load_dotenv(dotenv.find_dotenv())
 
 
 def connect_redis():
-    return redis.Redis(
-        host=os.getenv('REDIS_URL'),
-        port=int(os.getenv('REDIS_PORT')),
-        username=os.getenv('REDIS_USERNAME'),
-        password=os.getenv('REDIS_PASSWORD')
-    )
+    try:
+        return redis.Redis(
+            host=os.getenv('REDIS_URL'),
+            port=int(os.getenv('REDIS_PORT')),
+            username=os.getenv('REDIS_USERNAME'),
+            password=os.getenv('REDIS_PASSWORD')
+        )
+    except redis.exceptions.ConnectionError:
+        print('Redis connection error')
 
 
 def load_scores_rule_sheet():
     try:
-        with open('turtle-score-sheet.json') as file:
+        with open('./src/rulesheets/turtle-score-sheet.json') as file:
             return json.load(file)
     except FileNotFoundError:
         print('turtle-score-sheet.json not found')
 
 
 def connect_postgres():
-    connection_string = os.getenv('DATABASE_URL')
-    return psycopg.connect(connection_string, autocommit=True)
+    try:
+        connection_string = os.getenv('DATABASE_URL')
+        return psycopg.connect(connection_string, autocommit=True)
+    except psycopg.OperationalError:
+        print('PostgreSQL connection error')
 
 
 def remove_score_from_db(score_id: int):
