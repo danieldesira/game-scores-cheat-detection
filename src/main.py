@@ -52,13 +52,8 @@ def main():
         _, new_score = redis_client.brpop('scoreQueue')
         if new_score is not None:
             score = Score(json.loads(new_score))
-            if score.check(scores_rule_sheet):
-                print(f"Score {score.id} verified successfully")
-            else:
-                print(f"Cheat score detected. id: {score.id} |"
-                      f" {score.points} points | level {score.level} | duration {score.duration} |"
-                      f" {score.outcome_id} | {score.player_id}")
-                remove_score_from_db(score.id)
+            computed_points = score.compute_score(scores_rule_sheet)
+            print(f"{score.level}|{computed_points}|{score.duration}")
 
 
 main()
