@@ -57,10 +57,10 @@ class Score:
     def __parse_interactions_str(value: str):
         if value is not None:
             pairs = value.split('|')
-            return map(
+            return list(map(
                 lambda pair: Interaction(pair.split(',')),
                 pairs
-            )
+            ))
         else:
             return None
 
