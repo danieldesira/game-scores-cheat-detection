@@ -12,6 +12,7 @@ class Score:
         else:
             self.__outcome_id = Outcomes.Loss.value
         self.__player_id = score_entry.get('playerId')
+        self.__timestamp = score_entry.get('timestamp')
 
     @property
     def duration(self) -> int:
@@ -28,6 +29,10 @@ class Score:
     @property
     def player_id(self) -> int:
         return self.__player_id
+
+    @property
+    def timestamp(self) -> int:
+        return self.__timestamp
 
     def __get_duration_reward_if_applicable(self, rule_sheet) -> int:
         duration_reward = rule_sheet.get('durationReward')
@@ -46,7 +51,7 @@ class Score:
                     + self.__get_interaction_rewards(rule_sheet)
             )
         else:
-             raise Exception('Interaction inconsistent with character counts in level games')
+            raise Exception('Interaction inconsistent with character counts in level games')
 
     @staticmethod
     def __parse_interactions_str(value: str):
@@ -83,10 +88,15 @@ class Score:
             interaction_reward = interaction_rewards.get(i.character_type)
             if interaction_reward is not None and interaction_reward > 0:
                 max_allowed_occurrences = 0
+                is_character_defined = False
                 for l in range(1, self.__level + 1):
                     level_max_interactions = rule_sheet.get('levelMaxInteractions').get(l)
                     if level_max_interactions is not None:
-                        max_allowed_occurrences += level_max_interactions.get(i.character_type)
-                if max_allowed_occurrences < i.occurrences:
+                        level_character_type = level_max_interactions.get('characterType')
+                        if level_character_type is not None:
+                            max_allowed_occurrences += level_max_interactions.get(i.character_type)
+                            is_character_defined = True
+                if (is_character_defined
+                        and max_allowed_occurrences < i.occurrences):
                     return False
         return True
