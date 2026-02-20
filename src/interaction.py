@@ -3,7 +3,6 @@ class Interaction:
         self.__character_type = l[0]
         self.__occurrences = int(l[1])
 
-
     @property
     def character_type(self):
         return self.__character_type

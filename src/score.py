@@ -3,11 +3,14 @@ from src.outcomes import Outcomes
 
 
 class Score:
-    def __init__(self, score_entry):
+    def __init__(self, score_entry, final_level: int):
         self.__interactions = self.__parse_interactions_str(score_entry.get('interactions'))
         self.__duration = score_entry.get('duration')
         self.__level = score_entry.get('level')
-        self.__outcome_id = score_entry.get('level')
+        if score_entry.get('level') > final_level:
+            self.__outcome_id = Outcomes.Win.value
+        else:
+            self.__outcome_id = Outcomes.Loss.value
         self.__player_id = score_entry.get('playerId')
 
     @property
@@ -47,11 +50,14 @@ class Score:
 
     @staticmethod
     def __parse_interactions_str(value: str):
-        pairs = value.split('|')
-        return map(
-            lambda pair: Interaction(pair.split(',')),
-            pairs
-        )
+        if value is not None:
+            pairs = value.split('|')
+            return map(
+                lambda pair: Interaction(pair.split(',')),
+                pairs
+            )
+        else:
+            return None
 
     def __get_level_pass_rewards(self, rule_sheet) -> int:
         points = 0
@@ -72,7 +78,6 @@ class Score:
         return points
 
     def __check_interactions(self, rule_sheet) -> bool:
-
         interaction_rewards = rule_sheet.get('interactionRewards')
         for i in self.__interactions:
             interaction_reward = interaction_rewards.get(i.character_type)

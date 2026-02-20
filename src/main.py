@@ -36,10 +36,18 @@ def connect_postgres():
         print('PostgreSQL connection error')
 
 
-def remove_score_from_db(score_id: int):
+def insert_score_in_db(score_id: int):
     connection = connect_postgres()
     with connection.cursor() as cursor:
-        cursor.execute("DELETE FROM scores WHERE id = %s", (score_id,))
+        cursor.execute("INSERT INTO scores (points, level, created_at, player_id, outcome_id, duration) VALUES (%s, %s, %s, %s, %s, %s)", (score_id,))
+
+
+def get_final_level(rule_sheet):
+    levels = map(
+        lambda l: int(l),
+        rule_sheet.get('levelRewards').keys()
+    )
+    return max(levels)
 
 
 def main():
@@ -48,12 +56,18 @@ def main():
     redis_client = connect_redis()
     scores_rule_sheet = load_scores_rule_sheet()
 
+    final_level = get_final_level(scores_rule_sheet)
+
     while True:
         _, new_score = redis_client.brpop('scoreQueue')
         if new_score is not None:
-            score = Score(json.loads(new_score))
-            computed_points = score.compute_score(scores_rule_sheet)
-            print(f"{score.level}|{computed_points}|{score.duration}")
+            score = Score(json.loads(new_score), final_level)
+            print(f"{score.level}|{score.duration}|{score.player_id}|{score.outcome_id}")
+            try:
+                computed_points = score.compute_score(scores_rule_sheet)
+                print(f"{score.level}|{computed_points}|{score.duration}|{score.player_id}|{score.outcome_id}")
+            except Exception as e:
+                print(e)
 
 
 main()
