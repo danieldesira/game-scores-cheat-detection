@@ -46,10 +46,10 @@ def insert_score_in_db(score: Score, rule_sheet: dict):
 
 
 def get_final_level(rule_sheet):
-    levels = map(
+    levels = list(map(
         lambda l: int(l),
         rule_sheet.get('levelRewards').keys()
-    )
+    ))
     return max(levels)
 
 

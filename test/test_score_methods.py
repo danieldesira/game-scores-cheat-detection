@@ -40,16 +40,70 @@ class TestScoreMethods(unittest.TestCase):
                 'reward': 100,
             }
         }
+        self.__final_level = 3
+        self.__exception_msg = 'Interaction inconsistent with character counts in level games'
 
-    def test_valid_level1(self):
+    def test_level1(self):
         score = Score({
             'interactions': 'testPositive1,9|testNegative1,2',
             'level': 1,
             'duration': 100,
-            'outcome_id': Outcomes.Loss.value,
             'player_id': 1,
-        }, 1)
-        self.assertEqual(score.compute_score(self.__rulesheet), 135)
+        }, self.__final_level)
+        self.assertEqual(score.compute_score(self.__rulesheet), 35)
+        self.assertEqual(score.outcome_id, Outcomes.Loss.value)
+
+    def test_invalid_level1(self):
+        score = Score({
+            'interactions': 'testPositive1,11|testNegative1,2',
+            'level': 1,
+            'duration': 100,
+            'player_id': 1,
+        }, self.__final_level)
+        with self.assertRaises(Exception) as ex:
+            score.compute_score(self.__rulesheet)
+            self.assertEqual(str(ex.exception), self.__exception_msg)
+
+    def test_level2(self):
+        score = Score({
+            'interactions': 'testPositive1,20|testNegative1,5',
+            'level': 2,
+            'duration': 100,
+            'player_id': 1,
+        }, self.__final_level)
+        self.assertEqual(score.compute_score(self.__rulesheet), 175)
+        self.assertEqual(score.outcome_id, Outcomes.Loss.value)
+
+    def test_invalid_level2(self):
+        score = Score({
+            'interactions': 'testPositive1,10|testNegative1,5',
+            'level': 2,
+            'duration': 100,
+            'player_id': 1,
+        }, self.__final_level)
+        with self.assertRaises(Exception) as ex:
+            score.compute_score(self.__rulesheet)
+            self.assertEqual(str(ex.exception), self.__exception_msg)
+
+    def test_level3(self):
+        score = Score({
+            'interactions': 'testPositive1,30|testNegative1,5',
+            'level': 3,
+            'duration': 100,
+            'player_id': 1,
+        }, self.__final_level)
+        self.assertEqual(score.compute_score(self.__rulesheet), 375)
+        self.assertEqual(score.outcome_id, Outcomes.Loss.value)
+
+    def test_level4(self):
+        score = Score({
+            'interactions': 'testPositive1,30|testNegative1,5',
+            'level': 4,
+            'duration': 100,
+            'player_id': 1,
+        }, self.__final_level)
+        self.assertEqual(score.compute_score(self.__rulesheet), 625)
+        self.assertEqual(score.outcome_id, Outcomes.Win.value)
 
     if __name__ == '__main__':
         unittest.main()

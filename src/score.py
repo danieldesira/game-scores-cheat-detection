@@ -67,7 +67,7 @@ class Score:
     def __get_level_pass_rewards(self, rule_sheet) -> int:
         points = 0
         level_rewards = rule_sheet.get('levelRewards')
-        for i in range(1, self.__level + 1):
+        for i in range(1, self.__level):
             reward = level_rewards.get(i)
             if reward is not None:
                 points += reward
