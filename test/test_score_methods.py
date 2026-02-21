@@ -22,15 +22,15 @@ class TestScoreMethods(unittest.TestCase):
                 'testNegative3': -15,
             },
             'levelMaxInteractions': {
-                1: {
+                '1': {
                     'testPositive1': 10,
                     'testPositive2': 10,
                 },
-                2: {
+                '2': {
                     'testPositive1': 20,
                     'testPositive2': 10,
                 },
-                3: {
+                '3': {
                     'testPositive1': 20,
                     'testPositive2': 20,
                     'testPositive3': 5,

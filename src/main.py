@@ -3,6 +3,8 @@ import json
 import dotenv
 import psycopg
 import redis
+
+from src.lib.inconsistent_level_interaction_exception import InconsistentLevelInteractionException
 from src.lib.score import Score
 
 dotenv.load_dotenv(dotenv.find_dotenv())
@@ -71,8 +73,8 @@ def main():
                 print(f"Points computed: {computed_points}")
                 insert_score_in_db(score, scores_rule_sheet)
                 print("Score inserted successfully")
-            except Exception as e:
-                print(e)
+            except InconsistentLevelInteractionException as e:
+                print(e.message)
 
 
 main()

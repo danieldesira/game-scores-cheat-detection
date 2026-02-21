@@ -89,8 +89,8 @@ class Score:
             interaction_reward = interaction_rewards.get(interaction.character_type)
             if interaction_reward is not None and interaction_reward > 0:
                 max_allowed_occurrences = 0
-                for l in range(1, self.__level + 1):
-                    level_max_interactions = rule_sheet.get('levelMaxInteractions').get(l)
+                for level in range(1, self.__level + 1):
+                    level_max_interactions = rule_sheet.get('levelMaxInteractions').get(str(level))
                     if level_max_interactions is not None:
                         max_allowed_occurrences += level_max_interactions.get(interaction.character_type)
                 if max_allowed_occurrences < interaction.occurrences:
