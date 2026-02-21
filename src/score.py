@@ -1,3 +1,4 @@
+from src.inconsistent_level_interaction_exception import InconsistentLevelInteractionException
 from src.interaction import Interaction
 from src.outcomes import Outcomes
 
@@ -51,7 +52,7 @@ class Score:
                     + self.__get_interaction_rewards(rule_sheet)
             )
         else:
-            raise Exception('Interaction inconsistent with character counts in level games')
+            raise InconsistentLevelInteractionException()
 
     @staticmethod
     def __parse_interactions_str(value: str):
@@ -84,19 +85,14 @@ class Score:
 
     def __check_interactions(self, rule_sheet) -> bool:
         interaction_rewards = rule_sheet.get('interactionRewards')
-        for i in self.__interactions:
-            interaction_reward = interaction_rewards.get(i.character_type)
+        for interaction in self.__interactions:
+            interaction_reward = interaction_rewards.get(interaction.character_type)
             if interaction_reward is not None and interaction_reward > 0:
                 max_allowed_occurrences = 0
-                is_character_defined = False
                 for l in range(1, self.__level + 1):
                     level_max_interactions = rule_sheet.get('levelMaxInteractions').get(l)
                     if level_max_interactions is not None:
-                        level_character_type = level_max_interactions.get('characterType')
-                        if level_character_type is not None:
-                            max_allowed_occurrences += level_max_interactions.get(i.character_type)
-                            is_character_defined = True
-                if (is_character_defined
-                        and max_allowed_occurrences < i.occurrences):
+                        max_allowed_occurrences += level_max_interactions.get(interaction.character_type)
+                if max_allowed_occurrences < interaction.occurrences:
                     return False
         return True

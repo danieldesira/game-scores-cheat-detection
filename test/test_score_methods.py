@@ -1,5 +1,6 @@
 import unittest
 
+from src.inconsistent_level_interaction_exception import InconsistentLevelInteractionException
 from src.outcomes import Outcomes
 from src.score import Score
 
@@ -41,7 +42,6 @@ class TestScoreMethods(unittest.TestCase):
             }
         }
         self.__final_level = 3
-        self.__exception_msg = 'Interaction inconsistent with character counts in level games'
 
     def test_level1(self):
         score = Score({
@@ -60,9 +60,8 @@ class TestScoreMethods(unittest.TestCase):
             'duration': 100,
             'player_id': 1,
         }, self.__final_level)
-        with self.assertRaises(Exception) as ex:
+        with self.assertRaises(InconsistentLevelInteractionException):
             score.compute_score(self.__rulesheet)
-            self.assertEqual(str(ex.exception), self.__exception_msg)
 
     def test_level2(self):
         score = Score({
@@ -76,14 +75,13 @@ class TestScoreMethods(unittest.TestCase):
 
     def test_invalid_level2(self):
         score = Score({
-            'interactions': 'testPositive1,10|testNegative1,5',
+            'interactions': 'testPositive1,31|testNegative1,5',
             'level': 2,
             'duration': 100,
             'player_id': 1,
         }, self.__final_level)
-        with self.assertRaises(Exception) as ex:
+        with self.assertRaises(InconsistentLevelInteractionException):
             score.compute_score(self.__rulesheet)
-            self.assertEqual(str(ex.exception), self.__exception_msg)
 
     def test_level3(self):
         score = Score({
@@ -94,6 +92,16 @@ class TestScoreMethods(unittest.TestCase):
         }, self.__final_level)
         self.assertEqual(score.compute_score(self.__rulesheet), 375)
         self.assertEqual(score.outcome_id, Outcomes.Loss.value)
+
+    def test_invalid_level3(self):
+        score = Score({
+            'interactions': 'testPositive1,51|testNegative1,5',
+            'level': 3,
+            'duration': 100,
+            'player_id': 1,
+        }, self.__final_level)
+        with self.assertRaises(InconsistentLevelInteractionException):
+            score.compute_score(self.__rulesheet)
 
     def test_level4(self):
         score = Score({
