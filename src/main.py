@@ -3,7 +3,7 @@ import json
 import dotenv
 import psycopg
 import redis
-from src.score import Score
+from src.lib.score import Score
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 

@@ -1,8 +1,8 @@
 import unittest
 
-from src.inconsistent_level_interaction_exception import InconsistentLevelInteractionException
-from src.outcomes import Outcomes
-from src.score import Score
+from src.lib.inconsistent_level_interaction_exception import InconsistentLevelInteractionException
+from src.lib.outcomes import Outcomes
+from src.lib.score import Score
 
 
 class TestScoreMethods(unittest.TestCase):
