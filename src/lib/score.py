@@ -92,7 +92,9 @@ class Score:
                 for level in range(1, self.__level + 1):
                     level_max_interactions = rule_sheet.get('levelMaxInteractions').get(str(level))
                     if level_max_interactions is not None:
-                        max_allowed_occurrences += level_max_interactions.get(interaction.character_type)
+                        character_level_max_occurrences = level_max_interactions.get(interaction.character_type)
+                        if character_level_max_occurrences is not None:
+                            max_allowed_occurrences += character_level_max_occurrences
                 if max_allowed_occurrences < interaction.occurrences:
                     return False
         return True
