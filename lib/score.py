@@ -9,9 +9,9 @@ class Score:
         self.__duration = score_entry.get('duration')
         self.__level = score_entry.get('level')
         if score_entry.get('level') > final_level:
-            self.__outcome_id = Outcomes.Win.value
+            self.__outcome = Outcomes.Win.value
         else:
-            self.__outcome_id = Outcomes.Loss.value
+            self.__outcome = Outcomes.Loss.value
         self.__player_id = score_entry.get('playerId')
         self.__timestamp = score_entry.get('timestamp')
 
@@ -24,8 +24,8 @@ class Score:
         return self.__level
 
     @property
-    def outcome_id(self) -> int:
-        return self.__outcome_id
+    def outcome(self) -> str:
+        return self.__outcome
 
     @property
     def player_id(self) -> int:

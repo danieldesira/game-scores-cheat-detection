@@ -42,8 +42,8 @@ def insert_score_in_db(score: Score, rule_sheet: dict):
     connection = connect_postgres()
     with connection.cursor() as cursor:
         cursor.execute(
-            "INSERT INTO scores (points, level, created_at, player_id, outcome_id, duration) VALUES (%s, %s, %s, %s, %s, %s)",
-            (score.compute_score(rule_sheet), score.level, score.timestamp, score.player_id, score.outcome_id, score.duration)
+            "INSERT INTO scores (points, level, created_at, player_id, outcome, duration) VALUES (%s, %s, %s, %s, %s, %s)",
+            (score.compute_score(rule_sheet), score.level, score.timestamp, score.player_id, score.outcome, score.duration)
         )
 
 
@@ -67,7 +67,7 @@ def main():
         _, new_score = redis_client.brpop('scoreQueue')
         if new_score is not None:
             score = Score(json.loads(new_score), final_level)
-            print(f"{score.level}|{score.duration}|{score.player_id}|{score.outcome_id}|{score.timestamp}")
+            print(f"{score.level}|{score.duration}|{score.player_id}|{score.outcome}|{score.timestamp}")
             try:
                 computed_points = score.compute_score(scores_rule_sheet)
                 print(f"Points computed: {computed_points}")
