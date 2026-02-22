@@ -8,6 +8,14 @@ the future through simple architecture changes
 and adding JSON rule sheets following the existing 
 pattern.
 
+## Starting up worker
+
+In your terminal app, navigate to the project root and 
+enter: `python -m main`.
+
+You should see `Starting up scores cheat detection...` 
+and then you will see output whenever a score is submitted.
+
 ## Rule sheet structure
 
 Please check out the following JSON document 

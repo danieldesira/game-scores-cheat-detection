@@ -24,7 +24,7 @@ def connect_redis():
 
 def load_scores_rule_sheet():
     try:
-        with open('./rulesheets/turtle-score-sheet.json') as file:
+        with open('./src/rulesheets/turtle-score-sheet.json') as file:
             return json.load(file)
     except FileNotFoundError:
         print('turtle-score-sheet.json not found')
