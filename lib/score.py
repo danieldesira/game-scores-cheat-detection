@@ -1,6 +1,6 @@
-from src.lib.inconsistent_level_interaction_exception import InconsistentLevelInteractionException
-from src.lib.interaction import Interaction
-from src.lib.outcomes import Outcomes
+from lib.inconsistent_level_interaction_exception import InconsistentLevelInteractionException
+from lib.interaction import Interaction
+from lib.outcomes import Outcomes
 
 
 class Score:
