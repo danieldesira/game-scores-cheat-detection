@@ -39,7 +39,7 @@ class Score:
         duration_reward = rule_sheet.get('durationReward')
         if (duration_reward is not None
                 and self.__duration <= duration_reward.get('durationLimit')
-                and self.__outcome_id == Outcomes.Win.value):
+                and self.__outcome == Outcomes.Win.value):
             return duration_reward.get('reward')
         else:
             return 0
