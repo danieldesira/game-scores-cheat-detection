@@ -1,25 +1,26 @@
 # Game Scores Cheat Detection
 
-Worker process in Python which consumes a Redis 
-queue of game scores and compares them against a 
-rule sheet in a file. Used for Mission Sea Turtle 
-Nest but can be adapted to support other games in 
-the future through simple architecture changes 
-and adding JSON rule sheets following the existing 
+Worker process in Python which consumes a Redis
+queue of game scores and compares them against a
+rule sheet in a file. Used for Mission Sea Turtle
+Nest but can be adapted to support other games in
+the future through simple architecture changes
+and adding JSON rule sheets following the existing
 pattern.
 
 ## Starting up worker
 
-In your terminal app, navigate to the project root and 
+In your terminal app, navigate to the project root and
 enter: `python -m main`.
 
-You should see `Starting up scores cheat detection...` 
+You should see `Starting up scores cheat detection...`
 and then you will see output whenever a score is submitted.
 
 ## Rule sheet structure
 
-Please check out the following JSON document 
+Please check out the following JSON document
 as a reference:
+
 ```json
 {
   "levelRewards": {
@@ -82,24 +83,40 @@ as a reference:
   "durationReward": {
     "durationLimit": 300,
     "reward": 300
+  },
+  "resets": {
+    "max": 3,
+    "rewardPerRemaining": 50,
+    "rewardForPerfect": 200
   }
 }
 ```
 
-``levelRewards``: Points awarding for passing 
-the respective level. E.g.: 75 points for 
+``levelRewards``: Points awarding for passing
+the respective level. E.g.: 75 points for
 level 4.
 
-``levelMaxInteractions``: Maximum number of 
-interactions for characters that translate to 
-positive scores. E.g.: Level 8 may not have more 
+``levelMaxInteractions``: Maximum number of
+interactions for characters that translate to
+positive scores. E.g.: Level 8 may not have more
 than 200 shrimp interactions.
 
-``durationReward``: Contains information 
+``durationReward``: Contains information
 related to time-based reward systems.
 
-``durationLimit``: Maximum time in seconds 
+``durationLimit``: Maximum time in seconds
 for the reward to be granted.
 
-``reward``: Points awarded following a win 
+``reward``: Points awarded following a win
 in under the given ``durationLimit``.
+
+``resets``: Contains information related to
+remaining resets and reset reward system.
+
+``max``: Maximum number of possible resets.
+
+``rewardPerRemaining``: Points rewarded for
+each remaining reset.
+
+``rewardForPerfect``: Points rewarded for not
+using any resets.
