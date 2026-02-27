@@ -59,5 +59,10 @@
   "durationReward": {
     "durationLimit": 300,
     "reward": 300
+  },
+  "resets": {
+    "max": 3,
+    "rewardPerRemaining": 50,
+    "rewardForPerfect": 200
   }
 }

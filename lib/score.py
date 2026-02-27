@@ -1,10 +1,11 @@
 from lib.inconsistent_level_interaction_exception import InconsistentLevelInteractionException
 from lib.interaction import Interaction
+from lib.invalid_resets_exception import InvalidResetsException
 from lib.outcomes import Outcomes
 
 
 class Score:
-    def __init__(self, score_entry, final_level: int):
+    def __init__(self, score_entry, final_level: int, max_resets: int):
         self.__interactions = self.__parse_interactions_str(score_entry.get('interactions'))
         self.__duration = score_entry.get('duration')
         self.__level = score_entry.get('level')
@@ -14,6 +15,9 @@ class Score:
             self.__outcome = Outcomes.Loss.value
         self.__player_id = score_entry.get('playerId')
         self.__timestamp = score_entry.get('timestamp')
+        self.__remaining_resets = score_entry.get('remainingResets')
+        if self.__remaining_resets < 0 or self.__remaining_resets > max_resets:
+            raise InvalidResetsException()
 
     @property
     def duration(self) -> int:
@@ -35,6 +39,10 @@ class Score:
     def timestamp(self) -> int:
         return self.__timestamp
 
+    @property
+    def remaining_resets(self) -> int:
+        return self.__remaining_resets
+
     def __get_duration_reward_if_applicable(self, rule_sheet) -> int:
         duration_reward = rule_sheet.get('durationReward')
         if (duration_reward is not None
@@ -50,6 +58,7 @@ class Score:
                     self.__get_duration_reward_if_applicable(rule_sheet)
                     + self.__get_level_pass_rewards(rule_sheet)
                     + self.__get_interaction_rewards(rule_sheet)
+                    + self.__get_reset_rewards(rule_sheet)
             )
         else:
             raise InconsistentLevelInteractionException()
@@ -98,3 +107,11 @@ class Score:
                 if max_allowed_occurrences < interaction.occurrences:
                     return False
         return True
+
+    def __get_reset_rewards(self, rule_sheet) -> int:
+        reset_rewards = rule_sheet.get('resets')
+        reward_per_reset = reset_rewards.get('rewardPerRemaining')
+        perfect_reward = 0
+        if reset_rewards.get('max') == self.__remaining_resets:
+            perfect_reward = reset_rewards.get('rewardForPerfect')
+        return reward_per_reset * self.__remaining_resets + perfect_reward

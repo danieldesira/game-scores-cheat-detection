@@ -56,7 +56,7 @@ class TestScoreMethods(unittest.TestCase):
             'duration': 100,
             'player_id': 1,
             'remainingResets': 3,
-        }, self.__final_level)
+        }, self.__final_level, self.__rulesheet.get('resets').get('max'))
         self.assertEqual(score.compute_score(self.__rulesheet), 385)
         self.assertEqual(score.outcome, Outcomes.Loss.value)
 
@@ -67,7 +67,7 @@ class TestScoreMethods(unittest.TestCase):
             'duration': 100,
             'player_id': 1,
             'remainingResets': 3,
-        }, self.__final_level)
+        }, self.__final_level, self.__rulesheet.get('resets').get('max'))
         with self.assertRaises(InconsistentLevelInteractionException):
             score.compute_score(self.__rulesheet)
 
@@ -78,7 +78,7 @@ class TestScoreMethods(unittest.TestCase):
             'duration': 100,
             'player_id': 1,
             'remainingResets': 3,
-        }, self.__final_level)
+        }, self.__final_level, self.__rulesheet.get('resets').get('max'))
         self.assertEqual(score.compute_score(self.__rulesheet), 525)
         self.assertEqual(score.outcome, Outcomes.Loss.value)
 
@@ -89,7 +89,7 @@ class TestScoreMethods(unittest.TestCase):
             'duration': 100,
             'player_id': 1,
             'remainingResets': 3,
-        }, self.__final_level)
+        }, self.__final_level, self.__rulesheet.get('resets').get('max'))
         with self.assertRaises(InconsistentLevelInteractionException):
             score.compute_score(self.__rulesheet)
 
@@ -100,7 +100,7 @@ class TestScoreMethods(unittest.TestCase):
             'duration': 100,
             'player_id': 1,
             'remainingResets': 3,
-        }, self.__final_level)
+        }, self.__final_level, self.__rulesheet.get('resets').get('max'))
         self.assertEqual(score.compute_score(self.__rulesheet), 725)
         self.assertEqual(score.outcome, Outcomes.Loss.value)
 
@@ -111,7 +111,7 @@ class TestScoreMethods(unittest.TestCase):
             'duration': 100,
             'player_id': 1,
             'remainingResets': 3,
-        }, self.__final_level)
+        }, self.__final_level, self.__rulesheet.get('resets').get('max'))
         with self.assertRaises(InconsistentLevelInteractionException):
             score.compute_score(self.__rulesheet)
 
@@ -122,7 +122,7 @@ class TestScoreMethods(unittest.TestCase):
             'duration': 100,
             'player_id': 1,
             'remainingResets': 3,
-        }, self.__final_level)
+        }, self.__final_level, self.__rulesheet.get('resets').get('max'))
         self.assertEqual(score.compute_score(self.__rulesheet), 975)
         self.assertEqual(score.outcome, Outcomes.Win.value)
 
@@ -134,7 +134,39 @@ class TestScoreMethods(unittest.TestCase):
                 'duration': 100,
                 'player_id': 1,
                 'remainingResets': 4,
-            }, self.__final_level)
+            }, self.__final_level, self.__rulesheet.get('resets').get('max'))
+
+    def test_below_zero_resets(self):
+        with self.assertRaises(InvalidResetsException):
+            Score({
+                'interactions': 'testPositive1,30|testNegative1,5',
+                'level': 4,
+                'duration': 100,
+                'player_id': 1,
+                'remainingResets': -1,
+            }, self.__final_level, self.__rulesheet.get('resets').get('max'))
+
+    def test_under_max_resets(self):
+        score = Score({
+            'interactions': 'testPositive1,30|testNegative1,5',
+            'level': 4,
+            'duration': 100,
+            'player_id': 1,
+            'remainingResets': 2,
+        }, self.__final_level, self.__rulesheet.get('resets').get('max'))
+        self.assertEqual(score.compute_score(self.__rulesheet), 725)
+        self.assertEqual(score.outcome, Outcomes.Win.value)
+
+    def test_zero_resets(self):
+        score = Score({
+            'interactions': 'testPositive1,30|testNegative1,5',
+            'level': 4,
+            'duration': 100,
+            'player_id': 1,
+            'remainingResets': 0,
+        }, self.__final_level, self.__rulesheet.get('resets').get('max'))
+        self.assertEqual(score.compute_score(self.__rulesheet), 625)
+        self.assertEqual(score.outcome, Outcomes.Win.value)
 
     if __name__ == '__main__':
         unittest.main()
