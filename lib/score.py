@@ -69,7 +69,7 @@ class Score:
         points = 0
         level_rewards = rule_sheet.get('levelRewards')
         for i in range(1, self.__level):
-            reward = level_rewards.get(i)
+            reward = level_rewards.get(str(i))
             if reward is not None:
                 points += reward
         return points

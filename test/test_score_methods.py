@@ -9,9 +9,9 @@ class TestScoreMethods(unittest.TestCase):
     def setUp(self):
         self.__rulesheet = {
             'levelRewards': {
-                1: 100,
-                2: 150,
-                3: 150,
+                '1': 100,
+                '2': 150,
+                '3': 150,
             },
             'interactionRewards': {
                 'testPositive1': 5,
@@ -51,7 +51,7 @@ class TestScoreMethods(unittest.TestCase):
             'player_id': 1,
         }, self.__final_level)
         self.assertEqual(score.compute_score(self.__rulesheet), 35)
-        self.assertEqual(score.outcome_id, Outcomes.Loss.value)
+        self.assertEqual(score.outcome, Outcomes.Loss.value)
 
     def test_invalid_level1(self):
         score = Score({
@@ -71,7 +71,7 @@ class TestScoreMethods(unittest.TestCase):
             'player_id': 1,
         }, self.__final_level)
         self.assertEqual(score.compute_score(self.__rulesheet), 175)
-        self.assertEqual(score.outcome_id, Outcomes.Loss.value)
+        self.assertEqual(score.outcome, Outcomes.Loss.value)
 
     def test_invalid_level2(self):
         score = Score({
@@ -91,7 +91,7 @@ class TestScoreMethods(unittest.TestCase):
             'player_id': 1,
         }, self.__final_level)
         self.assertEqual(score.compute_score(self.__rulesheet), 375)
-        self.assertEqual(score.outcome_id, Outcomes.Loss.value)
+        self.assertEqual(score.outcome, Outcomes.Loss.value)
 
     def test_invalid_level3(self):
         score = Score({
@@ -111,7 +111,7 @@ class TestScoreMethods(unittest.TestCase):
             'player_id': 1,
         }, self.__final_level)
         self.assertEqual(score.compute_score(self.__rulesheet), 625)
-        self.assertEqual(score.outcome_id, Outcomes.Win.value)
+        self.assertEqual(score.outcome, Outcomes.Win.value)
 
     if __name__ == '__main__':
         unittest.main()
