@@ -1,6 +1,7 @@
 import unittest
 
 from lib.inconsistent_level_interaction_exception import InconsistentLevelInteractionException
+from lib.invalid_resets_exception import InvalidResetsException
 from lib.outcomes import Outcomes
 from lib.score import Score
 
@@ -39,6 +40,11 @@ class TestScoreMethods(unittest.TestCase):
             'durationReward': {
                 'durationLimit': 200,
                 'reward': 100,
+            },
+            'resets': {
+                'max': 3,
+                'rewardPerRemaining': 50,
+                'rewardForPerfect': 200,
             }
         }
         self.__final_level = 3
@@ -49,8 +55,9 @@ class TestScoreMethods(unittest.TestCase):
             'level': 1,
             'duration': 100,
             'player_id': 1,
+            'remainingResets': 3,
         }, self.__final_level)
-        self.assertEqual(score.compute_score(self.__rulesheet), 35)
+        self.assertEqual(score.compute_score(self.__rulesheet), 385)
         self.assertEqual(score.outcome, Outcomes.Loss.value)
 
     def test_invalid_level1(self):
@@ -59,6 +66,7 @@ class TestScoreMethods(unittest.TestCase):
             'level': 1,
             'duration': 100,
             'player_id': 1,
+            'remainingResets': 3,
         }, self.__final_level)
         with self.assertRaises(InconsistentLevelInteractionException):
             score.compute_score(self.__rulesheet)
@@ -69,8 +77,9 @@ class TestScoreMethods(unittest.TestCase):
             'level': 2,
             'duration': 100,
             'player_id': 1,
+            'remainingResets': 3,
         }, self.__final_level)
-        self.assertEqual(score.compute_score(self.__rulesheet), 175)
+        self.assertEqual(score.compute_score(self.__rulesheet), 525)
         self.assertEqual(score.outcome, Outcomes.Loss.value)
 
     def test_invalid_level2(self):
@@ -79,6 +88,7 @@ class TestScoreMethods(unittest.TestCase):
             'level': 2,
             'duration': 100,
             'player_id': 1,
+            'remainingResets': 3,
         }, self.__final_level)
         with self.assertRaises(InconsistentLevelInteractionException):
             score.compute_score(self.__rulesheet)
@@ -89,8 +99,9 @@ class TestScoreMethods(unittest.TestCase):
             'level': 3,
             'duration': 100,
             'player_id': 1,
+            'remainingResets': 3,
         }, self.__final_level)
-        self.assertEqual(score.compute_score(self.__rulesheet), 375)
+        self.assertEqual(score.compute_score(self.__rulesheet), 725)
         self.assertEqual(score.outcome, Outcomes.Loss.value)
 
     def test_invalid_level3(self):
@@ -99,6 +110,7 @@ class TestScoreMethods(unittest.TestCase):
             'level': 3,
             'duration': 100,
             'player_id': 1,
+            'remainingResets': 3,
         }, self.__final_level)
         with self.assertRaises(InconsistentLevelInteractionException):
             score.compute_score(self.__rulesheet)
@@ -109,9 +121,20 @@ class TestScoreMethods(unittest.TestCase):
             'level': 4,
             'duration': 100,
             'player_id': 1,
+            'remainingResets': 3,
         }, self.__final_level)
-        self.assertEqual(score.compute_score(self.__rulesheet), 625)
+        self.assertEqual(score.compute_score(self.__rulesheet), 975)
         self.assertEqual(score.outcome, Outcomes.Win.value)
+
+    def test_above_max_resets(self):
+        with self.assertRaises(InvalidResetsException):
+            Score({
+                'interactions': 'testPositive1,30|testNegative1,5',
+                'level': 4,
+                'duration': 100,
+                'player_id': 1,
+                'remainingResets': 4,
+            }, self.__final_level)
 
     if __name__ == '__main__':
         unittest.main()
