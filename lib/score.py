@@ -2,6 +2,7 @@ from lib.inconsistent_level_interaction_exception import InconsistentLevelIntera
 from lib.interaction import Interaction
 from lib.invalid_resets_exception import InvalidResetsException
 from lib.outcomes import Outcomes
+from lib.rulesheet_utils import get_final_level
 
 
 class Score:
@@ -109,9 +110,12 @@ class Score:
         return True
 
     def __get_reset_rewards(self, rule_sheet) -> int:
-        reset_rewards = rule_sheet.get('resets')
-        reward_per_reset = reset_rewards.get('rewardPerRemaining')
-        perfect_reward = 0
-        if reset_rewards.get('max') == self.__remaining_resets:
-            perfect_reward = reset_rewards.get('rewardForPerfect')
-        return reward_per_reset * self.__remaining_resets + perfect_reward
+        if self.__level > get_final_level(rule_sheet):
+            reset_rewards = rule_sheet.get('resets')
+            reward_per_reset = reset_rewards.get('rewardPerRemaining')
+            perfect_reward = 0
+            if reset_rewards.get('max') == self.__remaining_resets:
+                perfect_reward = reset_rewards.get('rewardForPerfect')
+            return reward_per_reset * self.__remaining_resets + perfect_reward
+        else:
+            return 0

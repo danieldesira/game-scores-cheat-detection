@@ -57,7 +57,7 @@ class TestScoreMethods(unittest.TestCase):
             'player_id': 1,
             'remainingResets': 3,
         }, self.__final_level, self.__rulesheet.get('resets').get('max'))
-        self.assertEqual(score.compute_score(self.__rulesheet), 385)
+        self.assertEqual(score.compute_score(self.__rulesheet), 35)
         self.assertEqual(score.outcome, Outcomes.Loss.value)
 
     def test_invalid_level1(self):
@@ -79,7 +79,7 @@ class TestScoreMethods(unittest.TestCase):
             'player_id': 1,
             'remainingResets': 3,
         }, self.__final_level, self.__rulesheet.get('resets').get('max'))
-        self.assertEqual(score.compute_score(self.__rulesheet), 525)
+        self.assertEqual(score.compute_score(self.__rulesheet), 175)
         self.assertEqual(score.outcome, Outcomes.Loss.value)
 
     def test_invalid_level2(self):
@@ -101,7 +101,7 @@ class TestScoreMethods(unittest.TestCase):
             'player_id': 1,
             'remainingResets': 3,
         }, self.__final_level, self.__rulesheet.get('resets').get('max'))
-        self.assertEqual(score.compute_score(self.__rulesheet), 725)
+        self.assertEqual(score.compute_score(self.__rulesheet), 375)
         self.assertEqual(score.outcome, Outcomes.Loss.value)
 
     def test_invalid_level3(self):
