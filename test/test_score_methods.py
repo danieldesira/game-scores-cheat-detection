@@ -156,6 +156,7 @@ class TestScoreMethods(unittest.TestCase):
         }, self.__final_level, self.__rulesheet.get('resets').get('max'))
         self.assertEqual(score.compute_score(self.__rulesheet), 725)
         self.assertEqual(score.outcome, Outcomes.Win.value)
+        self.assertEqual(score.resets_used, self.__rulesheet.get('resets').get('max') - 2)
 
     def test_zero_resets(self):
         score = Score({
@@ -167,6 +168,7 @@ class TestScoreMethods(unittest.TestCase):
         }, self.__final_level, self.__rulesheet.get('resets').get('max'))
         self.assertEqual(score.compute_score(self.__rulesheet), 625)
         self.assertEqual(score.outcome, Outcomes.Win.value)
+        self.assertEqual(score.resets_used, self.__rulesheet.get('resets').get('max'))
 
     if __name__ == '__main__':
         unittest.main()

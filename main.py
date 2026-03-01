@@ -35,9 +35,9 @@ def insert_score_in_db(score: Score, rule_sheet: dict):
     connection = connect_postgres()
     with connection.cursor() as cursor:
         cursor.execute(
-            "INSERT INTO scores (points, level, created_at, player_id, outcome, duration) VALUES (%s, %s, %s, %s, %s, %s)",
+            "INSERT INTO scores (points, level, created_at, player_id, outcome, duration, resets_used) VALUES (%s, %s, %s, %s, %s, %s, %s)",
             (score.compute_score(rule_sheet), score.level, score.timestamp, score.player_id, score.outcome,
-             score.duration)
+             score.duration, score.resets_used)
         )
 
 

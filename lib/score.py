@@ -19,6 +19,8 @@ class Score:
         self.__remaining_resets = score_entry.get('remainingResets')
         if self.__remaining_resets < 0 or self.__remaining_resets > max_resets:
             raise InvalidResetsException()
+        else:
+            self.__resets_used = max_resets - self.__remaining_resets
 
     @property
     def duration(self) -> int:
@@ -43,6 +45,10 @@ class Score:
     @property
     def remaining_resets(self) -> int:
         return self.__remaining_resets
+
+    @property
+    def resets_used(self) -> int:
+        return self.__resets_used
 
     def __get_duration_reward_if_applicable(self, rule_sheet) -> int:
         duration_reward = rule_sheet.get('durationReward')
