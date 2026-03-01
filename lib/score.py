@@ -116,12 +116,15 @@ class Score:
         return True
 
     def __get_reset_rewards(self, rule_sheet) -> int:
-        if self.__level > get_final_level(rule_sheet):
+        if self.__outcome == Outcomes.Win.value:
             reset_rewards = rule_sheet.get('resets')
-            reward_per_reset = reset_rewards.get('rewardPerRemaining')
-            perfect_reward = 0
-            if reset_rewards.get('max') == self.__remaining_resets:
-                perfect_reward = reset_rewards.get('rewardForPerfect')
-            return reward_per_reset * self.__remaining_resets + perfect_reward
+            if reset_rewards is not None:
+                reward_per_reset = reset_rewards.get('rewardPerRemaining')
+                perfect_reward = 0
+                if reset_rewards.get('max') == self.__remaining_resets:
+                    perfect_reward = reset_rewards.get('rewardForPerfect')
+                return reward_per_reset * self.__remaining_resets + perfect_reward
+            else:
+                return 0
         else:
             return 0
