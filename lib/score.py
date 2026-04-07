@@ -1,8 +1,8 @@
+from typing import Literal
+
 from lib.inconsistent_level_interaction_exception import InconsistentLevelInteractionException
 from lib.interaction import Interaction
 from lib.invalid_resets_exception import InvalidResetsException
-from lib.outcomes import Outcomes
-from lib.rulesheet_utils import get_final_level
 
 
 class Score:
@@ -11,9 +11,9 @@ class Score:
         self.__duration = score_entry.get('duration')
         self.__level = score_entry.get('level')
         if score_entry.get('level') > final_level:
-            self.__outcome = Outcomes.Win.value
+            self.__outcome = 'WIN'
         else:
-            self.__outcome = Outcomes.Loss.value
+            self.__outcome = 'LOSS'
         self.__player_id = score_entry.get('playerId')
         self.__timestamp = score_entry.get('timestamp')
         self.__remaining_resets = score_entry.get('remainingResets')
@@ -31,7 +31,7 @@ class Score:
         return self.__level
 
     @property
-    def outcome(self) -> str:
+    def outcome(self) -> Literal['WIN', 'LOSS']:
         return self.__outcome
 
     @property
@@ -54,7 +54,7 @@ class Score:
         duration_reward = rule_sheet.get('durationReward')
         if (duration_reward is not None
                 and self.__duration <= duration_reward.get('durationLimit')
-                and self.__outcome == Outcomes.Win.value):
+                and self.__outcome == 'WIN'):
             return duration_reward.get('reward')
         else:
             return 0
@@ -116,7 +116,7 @@ class Score:
         return True
 
     def __get_reset_rewards(self, rule_sheet) -> int:
-        if self.__outcome == Outcomes.Win.value:
+        if self.__outcome == 'WIN':
             reset_rewards = rule_sheet.get('resets')
             if reset_rewards is not None:
                 reward_per_reset = reset_rewards.get('rewardPerRemaining')
